@@ -23,7 +23,7 @@ def send_msg():
     
     # 推送消息
     response = WxPusher.send_message(msg_text,
-                      uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O"],
+                      uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O","UID_37ulq6Lw7Or3sLWDzTzgYBJ1xuNA"],
                       topic_ids=[4845],
                       token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
 

@@ -2,5 +2,3 @@ version: '3'
 services:
   docker-monitor:
     build: .
-    # ports:
-    #  - "8880:8880"

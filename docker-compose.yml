@@ -2,3 +2,6 @@ version: '3'
 services:
   docker-monitor:
     build: .
+
+environment:
+  - TZ=Asia/Shanghai

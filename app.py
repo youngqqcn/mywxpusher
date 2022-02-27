@@ -1,3 +1,8 @@
+# conding:utf8
+# author: yqq
+# date: 2022-02-27 15:54
+# description: 通过微信推送机子离线的消息，这是个本地服务
+
 from flask import Flask, jsonify, request
 from wxpusher import WxPusher
 

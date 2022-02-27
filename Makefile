@@ -1,6 +1,8 @@
 dep:
 	@pip3 install -r requirements.txt
-up:
+
+start:
 	@docker-compose up --force-recreate --build -d
+	
 stop:
 	@docker-compose stop

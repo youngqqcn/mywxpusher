@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from wxpusher import WxPusher
 
 app = Flask(__name__)
 
@@ -6,10 +7,24 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
+
 @app.route("/sendmsg", methods=["POST"])
 def send_msg():
-    print(request.json)
-    return jsonify({"err_code":0,"err_msg":None})
+    if 'msg_text' not in request.json:
+        return jsonify({"err_code":401,"err_msg":"invalid request parameters"})
+    msg_text = request.json['msg_text']
+    if len(msg_text) == 0: 
+        return jsonify({"err_code":402,"err_msg":"msg_text is empty"})
+    
+    # 推送消息
+    response = WxPusher.send_message(msg_text,
+                      uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O"],
+                      topic_ids=[4845],
+                      token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
+
+    if 1000 == response['code'] or response["success"] == True:
+        return jsonify({"err_code":0,"err_msg":None})
+    return jsonify({"err_code": response["code"], "err_msg": response["msg"] })
 
 
 if __name__ == '__main__':

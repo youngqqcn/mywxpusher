@@ -4,6 +4,7 @@
 
 import json
 import time
+import traceback
 import requests
 from wxpusher import WxPusher
 import logging
@@ -69,7 +70,7 @@ def loop():
                     if k == 'bitcoin':
                         btc_offline_workers.append(w_name)
 
-    if not (len(eth_offline_workers) > 0 or len(btc_offline_workers) or len(ltc_offline_workers)):
+    if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) > 0:
         logging.info("没有机子掉线")
     else:
         rtx3060ti_count = 0
@@ -137,6 +138,7 @@ def main():
             loop()
         except Exception as e:
             logging.error(e)
+            traceback.print_exc(e)
         logging.info('开始休眠5分钟')
         time.sleep(5 * 60)
     pass

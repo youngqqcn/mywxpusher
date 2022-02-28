@@ -18,5 +18,3 @@ services:
       - TZ=Asia/Shanghai
     ports:
       - "9444:9444"
-    volumes:
-      - /var/log:/var/log

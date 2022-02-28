@@ -1,19 +1,17 @@
 version: '3'
 services:
   docker-monitor:
-    # image: monitor
     container_name: monitor001
     build: 
-      context: .
+      context: ./monitor
       dockerfile: Dockerfile
     environment:
       - TZ=Asia/Shanghai
     
   docker-server:
-    # image: server
     container_name: server001
     build: 
-      context: .
+      context: ./server
       dockerfile: Dockerfile
     command: python server.py
     environment:

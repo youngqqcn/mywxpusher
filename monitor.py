@@ -12,31 +12,30 @@ import logging
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s,%(levelname)s] %(message)s')
 
 
+def get_offline_workers():
+    ethermine_addr = [
+        '0xc8eb99d5db1ec8ed483bf36cf548d096c063b4b2'
+    ]
 
-ethermine_addr = [
-    '0xc8eb99d5db1ec8ed483bf36cf548d096c063b4b2'
-]
+    eth_addrs = [
+        '0xa71f66a1faa36ae54ef8c3141bbdfc0aae3791ee',
+        '0x20f72f9bad243ac4d49101a29aa1cb180b933930',
+        '0xa1647b564b3c1e9617d431100fff7ea8740fb62b',
+        'heizai',
+        '0xa1647b564b3c1e9617d431100fff7ea8740fb62b',
+        '0x6b41d273ebe0cfe3c1c54253aa251a0b5c57e06d',
+        '0xcc26c8ffd21aa299929db453ab9014d560143ef6',
+        'z18978645557'
+    ]
 
-eth_addrs = [
-    '0xa71f66a1faa36ae54ef8c3141bbdfc0aae3791ee',
-    '0x20f72f9bad243ac4d49101a29aa1cb180b933930',
-    '0xa1647b564b3c1e9617d431100fff7ea8740fb62b',
-    'heizai',
-    '0xa1647b564b3c1e9617d431100fff7ea8740fb62b',
-    '0x6b41d273ebe0cfe3c1c54253aa251a0b5c57e06d',
-    '0xcc26c8ffd21aa299929db453ab9014d560143ef6',
-    'z18978645557'
-]
+    btc_addrs = [
+        'shishishu'
+    ]
 
-btc_addrs = [
-    'shishishu'
-]
+    ltc_addrs = [
+        
+    ]
 
-ltc_addrs = [
-    
-]
-
-def loop():
     # logging.info('开始新一轮检查')
     pool_host = 'https://api.f2pool.com'
     map = {
@@ -90,7 +89,11 @@ def loop():
             if nowts - w_time > 15 * 60:
                 eth_offline_workers.append(w_name)
 
+    return eth_offline_workers, btc_offline_workers, ltc_offline_workers
 
+
+def loop():
+    eth_offline_workers, btc_offline_workers, ltc_offline_workers = get_offline_workers()
     if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
         logging.info("没有机子掉线")
         return

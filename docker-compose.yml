@@ -1,7 +1,14 @@
 version: '3'
 services:
   docker-monitor:
-    build: .
+    build: monitor
     environment:
       - TZ=Asia/Shanghai
+  
+  docker-server:
+    build: server 
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "9444:9444"
 

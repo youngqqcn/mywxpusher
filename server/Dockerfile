@@ -4,4 +4,4 @@ COPY . /code
 RUN pip install -r /code/requirements.txt
 WORKDIR /code
 EXPOSE 9444
-# CMD python server.py
+CMD python server.py

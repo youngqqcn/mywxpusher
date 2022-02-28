@@ -72,65 +72,28 @@ def loop():
 
     if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) > 0:
         logging.info("没有机子掉线")
-    else:
-        rtx3060ti_worker = []
-        rx588_worker = []
-        rtx2060_worker = []
-        rx6600_worker = []
-        rtx1660_worker = []
-        rtx3080_worker = []
-        a11_worker = []
-        for w in eth_offline_workers:
-            if '588' in w:
-                rx588_worker.append(w)
-            elif '3060' in w:
-                rtx3060ti_worker.append(w)
-            elif '1660' in w:
-                rtx1660_worker.append(w)
-            elif '3080' in w:
-                rtx3080_worker.append(w)
-            elif '6600' in w:
-                rx6600_worker.append(w)
-            elif '2060' in w:
-                rtx2060_worker.append(w)
-            elif w.count('x') < 2:
-                a11_worker.append(w)
-            else:
-                rx588_worker.append(w)
-            pass
+        return
     
-        msg_text = '\r\n=====【掉线通知】=====\r\n'
-        if len(rx588_worker)> 0:
-            msg_text += '{}台小钢炮:[{},{}]\r\n\r\n'.format(len(rx588_worker), ','.join(rx588_worker[:5]), '' if len(rx588_worker) <= 5 else '...')
-        if len(rtx3060ti_worker) > 0:
-            msg_text += '{}台3060:[{},{}]\r\n\r\n'.format(len(rtx3060ti_worker), ','.join(rtx3060ti_worker[:5]), '' if len(rtx3060ti_worker) <= 5 else '...')
-        if len(a11_worker) > 0:
-            msg_text += '{}台心动:[{},{}]\r\n\r\n'.format(len(a11_worker), ','.join(a11_worker[:5]), '' if len(a11_worker) <= 5 else '...')
-        if len(rx6600_worker) > 0:
-            msg_text += '{}台6600:[{},{}]\r\n\r\n'.format(len(rx6600_worker), ','.join(rx6600_worker[:5]), '' if len(rx6600_worker) <= 5 else '...')
-        if len(rtx1660_worker) > 0:
-            msg_text += '{}台1660:[{},{}]\r\n\r\n'.format(len(rtx1660_worker), ','.join(rtx1660_worker[:5]), '' if len(rtx1660_worker) <= 5 else '...')
-        if len(rtx2060_worker) > 0:
-            msg_text += '{}台2060:[{},{}]\r\n\r\n'.format(len(rtx2060_worker), ','.join(rtx2060_worker[:5]), '' if len(rtx2060_worker) <= 5 else '...')
-        if len(rtx3080_worker) > 0:
-            msg_text += '{}台3080:[{},{}]\r\n\r\n'.format(len(rtx3080_worker), ','.join(rtx3080_worker[:5]), '' if len(rtx3080_worker) <= 5 else '...')
-        if len(btc_offline_workers) > 0:
-            msg_text += '{}台S19:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ','.join(btc_offline_workers[:5]), '' if len(btc_offline_workers) <= 5 else '...')
-        msg_text += '======================\r\n'
+    msg_text = '\r\n====【掉线通知】====\r\n'
+    msg_text += '{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ','.join(eth_offline_workers))
+    if len(btc_offline_workers) > 0:
+        if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
+        msg_text += '{}台蚂蚁:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ','.join(btc_offline_workers))
+    msg_text += '\r\n=========\r\n'
 
-        # 推送消息
-        logging.info(msg_text)
-        response = WxPusher.send_message(msg_text,
-                        uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O",
-                              "UID_37ulq6Lw7Or3sLWDzTzgYBJ1xuNA",
-                              ],
-                        topic_ids=[4845],
-                        token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
+    # 推送消息
+    logging.info(msg_text)
+    response = WxPusher.send_message(msg_text,
+                    uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O",
+                            "UID_37ulq6Lw7Or3sLWDzTzgYBJ1xuNA",
+                            ],
+                    topic_ids=[4845],
+                    token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
 
-        if 1000 == response['code'] or response["success"] == True:
-            logging.info('微信推送成功!')
-        else:
-            logging.error('微信推送失败!')
+    if 1000 == response['code'] or response["success"] == True:
+        logging.info('微信推送成功!')
+    else:
+        logging.error('微信推送失败!')
     pass
 
 def main():

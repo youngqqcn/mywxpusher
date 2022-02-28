@@ -70,7 +70,7 @@ def loop():
                     if k == 'bitcoin':
                         btc_offline_workers.append(w_name)
 
-    if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) > 0:
+    if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
         logging.info("没有机子掉线")
         return
     

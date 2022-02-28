@@ -5,4 +5,4 @@ RUN pip install -r /code/requirements.txt
 RUN chmod +x  /code/run.sh
 WORKDIR /code
 EXPOSE 9444
-CMD ["sh","run.sh"]
+ENTRYPOINT  ["run.sh"]

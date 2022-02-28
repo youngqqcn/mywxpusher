@@ -12,8 +12,12 @@ import logging
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s,%(levelname)s] %(message)s')
 
 
+
+ethermine_addr = [
+    '0xc8eb99d5db1ec8ed483bf36cf548d096c063b4b2'
+]
+
 eth_addrs = [
-    '0xc8eb99d5db1ec8ed483bf36cf548d096c063b4b2',
     '0xa71f66a1faa36ae54ef8c3141bbdfc0aae3791ee',
     '0x20f72f9bad243ac4d49101a29aa1cb180b933930',
     '0xa1647b564b3c1e9617d431100fff7ea8740fb62b',
@@ -44,6 +48,7 @@ def loop():
     btc_offline_workers = []
     ltc_offline_workers = []
 
+    # f2pool
     for k, v in map.items():
         path = pool_host + '/' + v[0]
         for addr in v[1]:
@@ -69,6 +74,22 @@ def loop():
                         eth_offline_workers.append(w_name)
                     if k == 'bitcoin':
                         btc_offline_workers.append(w_name)
+    
+    
+    # ethermine
+    for addr in ethermine_addr:
+        url = 'https://api.ethermine.org/miner/{}/dashboard'.format(addr)
+        rsp = requests.get(url)
+        jrsp = json.loads(rsp.text)
+        workers = jrsp['data']['workers']
+        for worker in workers:
+            w_name = worker['worker']
+            w_time = worker['lastSeen']
+            nowts = int(time.time())
+            # 超过15分钟
+            if nowts - w_time > 15 * 60:
+                eth_offline_workers.append(w_name)
+
 
     if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
         logging.info("没有机子掉线")

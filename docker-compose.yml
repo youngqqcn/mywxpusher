@@ -13,7 +13,7 @@ services:
     build: 
       context: ./server
       dockerfile: Dockerfile
-    command: python server.py
+    command: pip install -r requirements.txt && python server.py
     environment:
       - TZ=Asia/Shanghai
     ports:

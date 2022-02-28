@@ -1,19 +1,18 @@
 version: '3'
 services:
-  # docker-monitor:
-  #   container_name: monitor001
-  #   build: 
-  #     context: ./monitor
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - TZ=Asia/Shanghai
+  docker-monitor:
+    container_name: monitor001
+    build: 
+      context: ./monitor
+      dockerfile: Dockerfile
+    environment:
+      - TZ=Asia/Shanghai
     
   docker-server:
     container_name: server001
     build: 
       context: ./server
       dockerfile: Dockerfile
-    # command: pip install -r requirements.txt && python server.py
     environment:
       - TZ=Asia/Shanghai
     ports:

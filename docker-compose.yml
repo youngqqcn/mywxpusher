@@ -1,14 +1,13 @@
 version: '3'
 services:
   docker-monitor:
-    build: monitor
-    environment:
-      - TZ=Asia/Shanghai
-  
-  docker-server:
-    build: server 
+    container_name: monitor001
+    build: 
+      context: .
+      dockerfile: Dockerfile
     environment:
       - TZ=Asia/Shanghai
     ports:
       - "9444:9444"
-
+    volumes:
+      - /var/log:/var/log

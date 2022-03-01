@@ -48,47 +48,55 @@ def get_offline_workers():
     ltc_offline_workers = []
 
     # f2pool
-    for k, v in map.items():
-        path = pool_host + '/' + v[0]
-        for addr in v[1]:
-            url = path + '/' + addr
-            # print(url)
+    try:
+        for k, v in map.items():
+            path = pool_host + '/' + v[0]
+            for addr in v[1]:
+                url = path + '/' + addr
+                # print(url)
+                # for i in range(3):
+                rsp = requests.get(url)
+                if rsp.status_code != 200:
+                    logging.error('获取workers失败')
+                    time.sleep(10)
+                    rsp = requests.get(url)
+                    if rsp.status_code != 200:
+                        return [],[],[]
+                    
+                jrsp = json.loads(rsp.text)
+                workers = jrsp['workers']
+
+                for worker in workers:
+                    w_name = worker[0]
+                    w_time = worker[6]
+                    w_time = w_time[ : w_time.find('.')]
+                    ta = time.strptime(w_time, "%Y-%m-%dT%H:%M:%S")
+                    timestamp = int(time.mktime(ta))  + 8*3600
+                    # print(timestamp)
+                    nowts = int(time.time())
+                    # print(nowts)
+
+                    # 超过15分钟
+                    if nowts - timestamp > 15 * 60:
+                        if k == 'eth':
+                            eth_offline_workers.append(w_name)
+                        if k == 'bitcoin':
+                            btc_offline_workers.append(w_name)
+        # ethermine
+        for addr in ethermine_addr:
+            url = 'https://api.ethermine.org/miner/{}/dashboard'.format(addr)
             rsp = requests.get(url)
             jrsp = json.loads(rsp.text)
-            workers = jrsp['workers']
-
+            workers = jrsp['data']['workers']
             for worker in workers:
-                w_name = worker[0]
-                w_time = worker[6]
-                w_time = w_time[ : w_time.find('.')]
-                ta = time.strptime(w_time, "%Y-%m-%dT%H:%M:%S")
-                timestamp = int(time.mktime(ta))  + 8*3600
-                # print(timestamp)
+                w_name = worker['worker']
+                w_time = worker['lastSeen']
                 nowts = int(time.time())
-                # print(nowts)
-
                 # 超过15分钟
-                if nowts - timestamp > 15 * 60:
-                    if k == 'eth':
-                        eth_offline_workers.append(w_name)
-                    if k == 'bitcoin':
-                        btc_offline_workers.append(w_name)
-    
-    
-    # ethermine
-    for addr in ethermine_addr:
-        url = 'https://api.ethermine.org/miner/{}/dashboard'.format(addr)
-        rsp = requests.get(url)
-        jrsp = json.loads(rsp.text)
-        workers = jrsp['data']['workers']
-        for worker in workers:
-            w_name = worker['worker']
-            w_time = worker['lastSeen']
-            nowts = int(time.time())
-            # 超过15分钟
-            if nowts - w_time > 15 * 60:
-                eth_offline_workers.append(w_name)
-
+                if nowts - w_time > 15 * 60:
+                    eth_offline_workers.append(w_name)
+    except Exception as e:
+        logging.error("{}", e)
     return eth_offline_workers, btc_offline_workers, ltc_offline_workers
 
 
@@ -127,7 +135,7 @@ def main():
             loop()
         except Exception as e:
             logging.error(e)
-            traceback.print_exc(e)
+            # traceback.print_exc(e)
         logging.info('开始休眠10分钟')
         time.sleep(10 * 60)
     pass

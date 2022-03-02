@@ -58,12 +58,8 @@ def get_offline_workers():
                 if rsp is None:
                     return [],[],[]
                 if rsp.status_code != 200:
-                    logging.error('获取workers失败')
-                    time.sleep(10)
-                    rsp = requests.get(url)
-                    if rsp.status_code != 200:
-                        return [],[],[]
-                    
+                    return [],[],[]
+
                 jrsp = json.loads(rsp.text)
                 workers = jrsp['workers']
 
@@ -87,6 +83,10 @@ def get_offline_workers():
         for addr in ethermine_addr:
             url = 'https://api.ethermine.org/miner/{}/dashboard'.format(addr)
             rsp = requests.get(url)
+            if rsp is None:
+                return [],[],[]
+            if rsp.status_code != 200:
+                return [],[],[]
             jrsp = json.loads(rsp.text)
             workers = jrsp['data']['workers']
             for worker in workers:
@@ -97,7 +97,8 @@ def get_offline_workers():
                 if nowts - w_time > 15 * 60:
                     eth_offline_workers.append(w_name)
     except Exception as e:
-        logging.error("{}", e)
+        # logging.error("{}", e)
+        traceback.print_exc(e)
     return eth_offline_workers, btc_offline_workers, ltc_offline_workers
 
 
@@ -132,8 +133,8 @@ def main():
                 logging.error('微信推送失败!')
             pass
         except Exception as e:
-            logging.error(e)
-            # traceback.print_exc(e)
+            # logging.error(e)
+            traceback.print_exc(e)
 
         logging.info('开始休眠10分钟')
         time.sleep(10 * 60)

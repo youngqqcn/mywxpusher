@@ -105,36 +105,37 @@ def get_offline_workers():
 def main():
     logging.info("启动监控程序...")
     while True:
-        try:
-            eth_offline_workers, btc_offline_workers, ltc_offline_workers = get_offline_workers()
-            if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
-                logging.info("没有机子掉线")
-                return
-            
-            msg_text = '\r\n====【掉线通知】====\r\n'
-            msg_text += '{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ','.join(eth_offline_workers))
-            if len(btc_offline_workers) > 0:
-                if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
-                msg_text += '{}台蚂蚁:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ','.join(btc_offline_workers))
-            msg_text += '\r\n=========\r\n'
+        for i in range(1):
+            try:
+                eth_offline_workers, btc_offline_workers, ltc_offline_workers = get_offline_workers()
+                if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
+                    logging.info("没有机子掉线")
+                    break
+                
+                msg_text = '\r\n====【掉线通知】====\r\n'
+                msg_text += '{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ','.join(eth_offline_workers))
+                if len(btc_offline_workers) > 0:
+                    if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
+                    msg_text += '{}台蚂蚁:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ','.join(btc_offline_workers))
+                msg_text += '\r\n=========\r\n'
 
-            # 推送消息
-            logging.info(msg_text)
-            response = WxPusher.send_message(msg_text,
-                            uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O",
-                                    "UID_37ulq6Lw7Or3sLWDzTzgYBJ1xuNA",
-                                    ],
-                            topic_ids=[4845],
-                            token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
+                # 推送消息
+                logging.info(msg_text)
+                response = WxPusher.send_message(msg_text,
+                                uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O",
+                                        "UID_37ulq6Lw7Or3sLWDzTzgYBJ1xuNA",
+                                        ],
+                                topic_ids=[4845],
+                                token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
 
-            if 1000 == response['code'] or response["success"] == True:
-                logging.info('微信推送成功!')
-            else:
-                logging.error('微信推送失败!')
-            pass
-        except Exception as e:
-            # logging.error(e)
-            traceback.print_exc(e)
+                if 1000 == response['code'] or response["success"] == True:
+                    logging.info('微信推送成功!')
+                else:
+                    logging.error('微信推送失败!')
+                pass
+            except Exception as e:
+                # logging.error(e)
+                traceback.print_exc(e)
 
         logging.info('开始休眠10分钟')
         time.sleep(10 * 60)

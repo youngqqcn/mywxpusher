@@ -102,6 +102,16 @@ def get_offline_workers():
     return eth_offline_workers, btc_offline_workers, ltc_offline_workers
 
 
+def get_ignored_workers():
+    try:
+        rsp = requests.get('http://wxapp.video.eqlky.com:13008/ignore')
+        jrsp = json.loads(rsp.text)
+        workers = jrsp['workers']
+        return workers
+    except Exception as e:
+        print(e)
+    return []
+
 def main():
     logging.info("启动监控程序...")
     while True:
@@ -111,6 +121,10 @@ def main():
                 if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
                     logging.info("没有机子掉线")
                     break
+                
+                # 去掉忽略的机子
+                ignore_workers = get_ignored_workers()
+                eth_offline_workers = list(set(eth_offline_workers) - set(ignore_workers))
                 
                 msg_text = '\r\n====【掉线通知】====\r\n'
                 msg_text += '{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ','.join(eth_offline_workers))

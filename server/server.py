@@ -16,12 +16,28 @@ app = Flask(__name__)
 # def hello_world():
 #     return "<p>Hello, World!</p>"
 
+g_workers = set()
 
 @app.route("/offline")
 def offline_workers():
     eth_workers, btc_workers, ltc_workers = get_offline_workers()
     result = eth_workers + btc_workers + ltc_workers
     return  jsonify({"err_code":0,"err_msg":"", "data": result })
+
+
+
+@app.route("/ignore", methods=["GET", "POST"])
+def ignore_workers():
+    if request.method == "POST":
+        if request.json is not None:
+            workers = request.json['workers']
+            if len(workers) > 0:
+                for w in workers:
+                    g_workers.add(w)
+        return jsonify({"err_code":0, "err_msg":"", "data":None})
+    return jsonify({"err_code":0, "err_msg":"", "data":list(g_workers)})
+
+
 
 # @app.route("/sendmsg", methods=["POST"])
 # def send_msg():

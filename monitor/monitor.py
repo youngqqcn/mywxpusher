@@ -106,7 +106,7 @@ def get_ignored_workers():
     try:
         rsp = requests.get('http://wxapp.video.eqlky.com:13008/ignore')
         jrsp = json.loads(rsp.text)
-        workers = jrsp['workers']
+        workers = jrsp['data']
         return workers
     except Exception as e:
         print(e)

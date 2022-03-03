@@ -118,13 +118,14 @@ def main():
         for i in range(1):
             try:
                 eth_offline_workers, btc_offline_workers, ltc_offline_workers = get_offline_workers()
+                # 去掉忽略的机子
+                ignore_workers = get_ignored_workers()
+                eth_offline_workers = list(set(eth_offline_workers) - set(ignore_workers))
+
                 if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
                     logging.info("没有机子掉线")
                     break
                 
-                # 去掉忽略的机子
-                ignore_workers = get_ignored_workers()
-                eth_offline_workers = list(set(eth_offline_workers) - set(ignore_workers))
                 
                 msg_text = '\r\n====【掉线通知】====\r\n'
                 msg_text += '{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ','.join(eth_offline_workers))

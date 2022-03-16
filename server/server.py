@@ -26,7 +26,7 @@ def offline_workers():
 
 
 
-@app.route("/ignore", methods=["GET", "POST"])
+@app.route("/ignore", methods=["GET", "POST", "DELETE"])
 def ignore_workers():
     if request.method == "POST":
         if request.json is not None:
@@ -34,6 +34,13 @@ def ignore_workers():
             if len(workers) > 0:
                 for w in workers:
                     g_workers.add(w)
+        return jsonify({"err_code":0, "err_msg":"", "data":None})
+    if request.method == "DELETE":
+        if request.json is not None:
+            workers = request.json['workers']
+            if len(workers) > 0:
+                for w in workers:
+                    g_workers.remove(w)
         return jsonify({"err_code":0, "err_msg":"", "data":None})
     return jsonify({"err_code":0, "err_msg":"", "data":list(g_workers)})
 

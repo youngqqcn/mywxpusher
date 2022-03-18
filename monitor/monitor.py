@@ -127,8 +127,7 @@ def main():
                     break
                 
                 
-                msg_text = '【掉线通知】'
-                msg_text += '{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ',\r\n'.join(eth_offline_workers))
+                msg_text = '掉线{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ',\r\n'.join(eth_offline_workers))
                 if len(btc_offline_workers) > 0:
                     if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
                     msg_text += '{}台蚂蚁:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ',\r\n'.join(btc_offline_workers))

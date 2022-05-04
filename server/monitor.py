@@ -31,8 +31,8 @@ def get_offline_workers():
     ]
 
     ltc_addrs = [
-        'shishishu'
-        'dai5786'
+        'shishishu',
+        'dai5786',
     ]
 
     # logging.info('开始新一轮检查')
@@ -50,18 +50,19 @@ def get_offline_workers():
     try:
         for k, v in map.items():
             path = pool_host + '/' + v[0]
+            print(path)
             for addr in v[1]:
                 url = path + '/' + addr
-                # print(url)
+                print(url)
                 rsp = requests.get(url)
                 if rsp is None:
-                    return [],[],[]
+                    return eth_offline_workers, btc_offline_workers, ltc_offline_workers
                 if rsp.status_code != 200:
-                    logging.error('获取workers失败')
+                    logging.error('获取workers失败, status code: {}'.format(rsp.status_code))
                     time.sleep(10)
                     rsp = requests.get(url)
                     if rsp.status_code != 200:
-                        return [],[],[]
+                        return eth_offline_workers, btc_offline_workers, ltc_offline_workers
 
                 jrsp = json.loads(rsp.text)
                 workers = jrsp['workers']
@@ -88,4 +89,3 @@ def get_offline_workers():
         # logging.error("{}", e)
         traceback.print_exc(e)
     return eth_offline_workers, btc_offline_workers, ltc_offline_workers
-

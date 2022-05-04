@@ -55,13 +55,13 @@ def get_offline_workers():
                 # print(url)
                 rsp = requests.get(url)
                 if rsp is None:
-                    return [],[],[]
+                    return eth_offline_workers, btc_offline_workers, ltc_offline_workers
                 if rsp.status_code != 200:
                     logging.error('获取workers失败')
                     time.sleep(10)
                     rsp = requests.get(url)
                     if rsp.status_code != 200:
-                        return [],[],[]
+                        return eth_offline_workers, btc_offline_workers, ltc_offline_workers
 
                 jrsp = json.loads(rsp.text)
                 workers = jrsp['workers']

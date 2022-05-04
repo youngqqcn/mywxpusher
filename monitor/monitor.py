@@ -13,8 +13,6 @@ logging.basicConfig(level=logging.INFO, format='[%(asctime)s,%(levelname)s] %(me
 
 
 def get_offline_workers():
-    ethermine_addr = [
-    ]
 
     eth_addrs = [
         '0xc8eb99d5db1ec8ed483bf36cf548d096c063b4b2',
@@ -33,15 +31,16 @@ def get_offline_workers():
     ]
 
     ltc_addrs = [
-        
+        'shishishu'
+        'dai5786'
     ]
 
     # logging.info('开始新一轮检查')
     pool_host = 'https://api.f2pool.com'
     map = {
         'eth': ['eth', eth_addrs],
-        # 'ltc': ['litecoin', ltc_addrs],
         'btc': ['bitcoin', btc_addrs],
+        'ltc': ['litecoin', ltc_addrs],
     }
     eth_offline_workers = []
     btc_offline_workers = []
@@ -58,7 +57,11 @@ def get_offline_workers():
                 if rsp is None:
                     return [],[],[]
                 if rsp.status_code != 200:
-                    return [],[],[]
+                    logging.error('获取workers失败')
+                    time.sleep(10)
+                    rsp = requests.get(url)
+                    if rsp.status_code != 200:
+                        return [],[],[]
 
                 jrsp = json.loads(rsp.text)
                 workers = jrsp['workers']
@@ -77,25 +80,10 @@ def get_offline_workers():
                     if nowts - timestamp > 15 * 60:
                         if k == 'eth':
                             eth_offline_workers.append(w_name)
-                        if k == 'bitcoin':
+                        if k == 'btc':
                             btc_offline_workers.append(w_name)
-        # # ethermine
-        # for addr in ethermine_addr:
-        #     url = 'https://api.ethermine.org/miner/{}/dashboard'.format(addr)
-        #     rsp = requests.get(url)
-        #     if rsp is None:
-        #         return [],[],[]
-        #     if rsp.status_code != 200:
-        #         return [],[],[]
-        #     jrsp = json.loads(rsp.text)
-        #     workers = jrsp['data']['workers']
-        #     for worker in workers:
-        #         w_name = worker['worker']
-        #         w_time = worker['lastSeen']
-        #         nowts = int(time.time())
-        #         # 超过15分钟
-        #         if nowts - w_time > 15 * 60:
-        #             eth_offline_workers.append(w_name)
+                        if k == 'ltc':
+                            ltc_offline_workers.append(w_name)
     except Exception as e:
         # logging.error("{}", e)
         traceback.print_exc(e)
@@ -126,11 +114,16 @@ def main():
                     logging.info("没有机子掉线")
                     break
                 
-                
-                msg_text = '掉线{}台小钢炮: [{}]\r\n\r\n'.format(len(eth_offline_workers), ',\r\n'.join(eth_offline_workers))
+                msg_text = '掉线({}E,{}B,{}L)\r\n'.format(len(eth_offline_workers), len(btc_offline_workers), len(ltc_offline_workers) )
+                if len(eth_offline_workers) > 0:
+                    if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
+                    msg_text += '{}只XGP:[{},{}]\r\n\r\n'.format(len(eth_offline_workers), ',\r\n'.join(eth_offline_workers))
                 if len(btc_offline_workers) > 0:
                     if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
-                    msg_text += '{}台蚂蚁:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ',\r\n'.join(btc_offline_workers))
+                    msg_text += '{}头S19:[{},{}]\r\n\r\n'.format(len(btc_offline_workers), ',\r\n'.join(btc_offline_workers))
+                if len(ltc_offline_workers) > 0:
+                    if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
+                    msg_text += '{}条L7:[{},{}]\r\n\r\n'.format(len(ltc_offline_workers), ',\r\n'.join(ltc_offline_workers))
 
                 # 推送消息
                 logging.info(msg_text)

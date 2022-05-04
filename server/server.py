@@ -38,8 +38,12 @@ def ignore_workers():
     if request.method == "DELETE":
         if request.json is not None:
             workers = request.json['workers']
-            if len(workers) > 0:
-                for w in workers:
+
+            sa = set(workers)
+            sg = set(g_workers)
+            sremove = sg.intersection(sa) # 交集
+            if len(sremove) > 0:
+                for w in sremove:
                     g_workers.remove(w)
         return jsonify({"err_code":0, "err_msg":"", "data":None})
     return jsonify({"err_code":0, "err_msg":"", "data":list(g_workers)})

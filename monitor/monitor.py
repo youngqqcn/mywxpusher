@@ -114,7 +114,7 @@ def main():
                     logging.info("没有机子掉线")
                     break
                 
-                msg_text = '掉线({}E,{}B,{}L)\r\n'.format(len(eth_offline_workers), len(btc_offline_workers), len(ltc_offline_workers) )
+                msg_text = '{}E,{}B,{}L\r\n'.format(len(eth_offline_workers), len(btc_offline_workers), len(ltc_offline_workers) )
                 if len(eth_offline_workers) > 0:
                     if len(msg_text) > 0: msg_text += '\r\n---------------\r\n'
                     msg_text += '{}只XGP:[{},{}]\r\n\r\n'.format(len(eth_offline_workers), ',\r\n'.join(eth_offline_workers))

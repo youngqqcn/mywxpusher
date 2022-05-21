@@ -127,21 +127,24 @@ def main():
                     msg_text += '{}条L7:[{}]\r\n\r\n'.format(len(ltc_offline_workers), ',\r\n'.join(ltc_offline_workers))
 
                 # 推送消息
-                logging.info(msg_text)
-                response = WxPusher.send_message(msg_text,
+                try:
+                    logging.info(msg_text)
+                    response = WxPusher.send_message(msg_text,
                                 uids=["UID_GMc98LNntwlnCiqLc9Z4WTfFoa7O",
                                         "UID_37ulq6Lw7Or3sLWDzTzgYBJ1xuNA",
                                         ],
                                 topic_ids=[4845],
                                 token='AT_aVB4y3AQOtIn023wluulDzuWI8m0nXuS')
-
-                if 1000 == response['code'] or response["success"] == True:
-                    logging.info('微信推送成功!')
-                else:
-                    logging.error('微信推送失败!')
+                    if 1000 == response['code'] or response["success"] == True:
+                        logging.info('微信推送成功!')
+                    else:
+                        logging.error('微信推送失败!')
+                except Exception as e:
+                    logging.error('推送异常:{}'.format(e))
+                
                 pass
             except Exception as e:
-                # logging.error(e)
+                logging.error(e)
                 traceback.print_exc(e)
 
         logging.info('开始休眠10分钟')
@@ -149,5 +152,9 @@ def main():
     pass
 
 if __name__ == '__main__':
-    main()
+     while True:
+        try:
+            main()
+        except:
+            pass
     

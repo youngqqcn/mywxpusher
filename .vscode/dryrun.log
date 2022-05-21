@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/yqq/mine/mywxpusher'
+pip3 install -r requirements.txt
+make: Leaving directory '/home/yqq/mine/mywxpusher'
+ 

@@ -110,6 +110,8 @@ def main():
                 # 去掉忽略的机子
                 ignore_workers = get_ignored_workers()
                 eth_offline_workers = list(set(eth_offline_workers) - set(ignore_workers))
+                btc_offline_workers = list(set(btc_offline_workers) - set(ignore_workers))
+                ltc_offline_workers = list(set(ltc_offline_workers) - set(ignore_workers))
 
                 if len(eth_offline_workers) == 0 and len(btc_offline_workers) == 0 and len(ltc_offline_workers) == 0:
                     logging.info("没有机子掉线")

@@ -77,12 +77,19 @@ def get_offline_workers():
                     nowts = int(time.time())
                     # print(nowts)
 
+
+                    #####################################################################################
+                    # 2022-06-13日，588全部关机，s19全部关机
+                    if not ('3060' in w_name or '3070' in w_name or '2060' in w_name or '3070' in w_name):
+                        continue
+                    #####################################################################################
+
                     # 超过15分钟
                     if nowts - timestamp > 15 * 60:
                         if k == 'eth':
                             eth_offline_workers.append(w_name)
-                        if k == 'btc':
-                            btc_offline_workers.append(w_name)
+                        # if k == 'btc':
+                        #     btc_offline_workers.append(w_name)
                         if k == 'ltc':
                             ltc_offline_workers.append(w_name)
     except Exception as e:
